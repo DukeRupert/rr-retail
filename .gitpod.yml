@@ -3,20 +3,9 @@ image: gitpod/workspace-postgres:2024-01-17-14-14-06
 
 # List the start up tasks. Learn more: https://www.gitpod.io/docs/configure/workspaces/tasks
 tasks:
-  - name: start server
-    command: cd ./server && npx medusa start
-  - name: start client
-    command: cd ./client && pnpm dev
+  - name: Startup
+    init: pg_start
 
 # List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
-ports:
-  - name: PSQL
-    description: Port 5432 for the backend database
-    port: 5432
-    onOpen: notify
-  - name: Medusa
-    description: Port 9000 for Medusa backend
-    port: 9000
-    onOpen: open-browser
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
