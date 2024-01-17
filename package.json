@@ -1,0 +1,11 @@
+{
+  "name": "rr-retail",
+  "version": "1.0.0",
+  "description": "Rockabilly Roasting retail sales website. Backend powered by Medusa and frontend powered by SvelteKit. Payment processor Stripe.",
+  "scripts": {
+    "start": "cd ./server && yarn start & cd ./client && pnpm dev"
+  },
+  "keywords": ["e-commerce", "medusa", "medusajs", "sveltekit", "svelte"],
+  "author": "Logan Williams",
+  "license": "ISC"
+}

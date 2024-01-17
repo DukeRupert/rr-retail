@@ -12,6 +12,8 @@ switch (process.env.NODE_ENV) {
     ENV_FILE_NAME = ".env.test";
     break;
   case "development":
+    ENV_FILE_NAME = ".env.development";
+    break;
   default:
     ENV_FILE_NAME = ".env";
     break;
@@ -50,9 +52,12 @@ const plugins = [
       develop: {
         open: process.env.OPEN_BROWSER !== "false",
         allowedHosts: [
-          '7001-debug-dukerupert-rrretail-taek4wqwtx2.ws-us107.gitpod.io',
-        ],
+          'https://7001-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io',
+          '7001-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io',
+          '9000-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io'
+        ],        
       },
+      backend: 'https://9000-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io'
     },
   },
 ];

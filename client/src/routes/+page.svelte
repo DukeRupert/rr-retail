@@ -4,7 +4,9 @@
    export let data: PageData
 </script>
 
-<Collection products={data.products} />
+{#if data.products}
+   <Collection products={data.products} />
+{/if}
 
 <!-- {#each data.products as product}
    <div>
