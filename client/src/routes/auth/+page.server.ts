@@ -1,8 +1,6 @@
-import type { PageServerLoad, Actions } from './$types'
+import type { PageServerLoad } from './$types'
 import { error, redirect } from '@sveltejs/kit'
 import { message, superValidate } from 'sveltekit-superforms/server'
-import { validateToken } from 'sveltekit-turnstile'
-import { SECRET_TURNSTILE_KEY } from '$env/static/private'
 import { loginPostReq, registerPostReq, forgotPostReq, resetPostReq } from '$lib/validators'
 import medusa from '$lib/server/medusa'
 
@@ -27,17 +25,13 @@ export const load: PageServerLoad = async ({ locals, url }) => {
    }
 }
 
-export const actions: Actions = {
+/** @type {import('./$types').Actions} */
+export const actions = {
    login: async ({ request, locals, cookies }) => {
+      console.log('Login form action')
       const form = await superValidate(request, loginPostReq, { id: 'login' })
       if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
-      // If Turnstile public key is not set in env, the token sent by form will be 'no-token-required'
-      // If the token is anything else, check for validity
-      if (form.data.token !== 'no-token-required') {
-         if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) {
-            return message(form, 'Security token timed out or invalid. Please try again.', { status: 418 })
-         }
-      }
+      console.log('Passed validity check')
       if (await medusa.login(locals, cookies, form.data.email, form.data.password)) {
          throw redirect(302, `/${form.data.rurl}`)
       } else { 
@@ -46,15 +40,10 @@ export const actions: Actions = {
    },
 
    register: async ({ request, locals, cookies }) => {
+      console.log('Executing Register form action')
       const form = await superValidate(request, registerPostReq, { id: 'register' })
       if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
-      // If Turnstile public key is not set in env, the token sent by form will be 'no-token-required'
-      // If the token is anything else, check for validity
-      if (form.data.token !== 'no-token-required') {
-         if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) {
-            return message(form, 'Security token timed out or invalid. Please try again.', { status: 418 })
-         }
-      }
+      
       const user = {
          first_name: form.data.firstName,
          last_name: form.data.lastName,
@@ -71,13 +60,7 @@ export const actions: Actions = {
    forgot: async ({ request }) => {
       const form = await superValidate(request, forgotPostReq, { id: 'forgot' })
       if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
-      // If Turnstile public key is not set in env, the token sent by form will be 'no-token-required'
-      // If the token is anything else, check for validity
-      if (form.data.token !== 'no-token-required') {
-         if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) {
-            return message(form, 'Security token timed out or invalid. Please try again.', { status: 418 })
-         }
-      }
+      
       if (await medusa.requestResetPassword(form.data.email)) {
          return message(form, 'If an account with that email exists, a reset code has been sent to your email address')
       } else {
@@ -88,13 +71,7 @@ export const actions: Actions = {
    reset: async ({ request, locals, cookies }) => {
       const form = await superValidate(request, resetPostReq, { id: 'reset' })
       if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
-      // If Turnstile public key is not set in env, the token sent by form will be 'no-token-required'
-      // If the token is anything else, check for validity
-      if (form.data.token !== 'no-token-required') {
-         if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) {
-            return message(form, 'Security token timed out or invalid. Please try again.', { status: 418 })
-         }
-      }
+      
       // if (await medusa.resetPassword(form.data.email, form.data.password, form.data.code)) return message(form, 'Your password has been reset', { status: 200 })
       if (await medusa.resetPassword(form.data.email, form.data.password, form.data.code)) {
          if (await medusa.login(locals, cookies, form.data.email, form.data.password)) {

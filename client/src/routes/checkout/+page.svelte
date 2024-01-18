@@ -140,10 +140,9 @@
 
   const startCheckout = async (token: string) => {
     try {
-      let response = await fetch("/checkout/turnstile", {
-        method: "POST",
-        body: JSON.stringify({ token }),
-      }).then((res) => res.json());
+      let response = await fetch("/checkout/turnstile").then((res) =>
+        res.json()
+      );
       cart = response.cart;
       clientSecret = response.cart.payment_session.data.client_secret;
       shippingOptions = response.shippingOptions;
@@ -165,13 +164,11 @@
   };
 
   onMount(async () => {
-    if ((token = "no-token-required")) {
-      await startCheckout(token);
-    }
+    await startCheckout(token);
   });
 </script>
 
-<SEO title="Checkout" description="Checkout page for {PUBLIC_SITE_NAME}" />
+<!-- <SEO title="Checkout" description="Checkout page for {PUBLIC_SITE_NAME}" /> -->
 
 <noscript>
   <p>Please enable javascript to complete checkout.</p>
@@ -216,15 +213,6 @@
   </main>
 {:else if !cart?.items}
   <p>Your cart is empty.</p>
-{:else if !token}
-  <Turnstile
-    theme="light"
-    siteKey={PUBLIC_TURNSTILE_SITE_KEY}
-    on:turnstile-callback={async (e) => {
-      token = e.detail.token;
-      await startCheckout(token);
-    }}
-  />
 {:else if !loading}
   <main
     class="lg:flex lg:min-h-full lg:flex-row-reverse lg:max-h-screen lg:overflow-hidden"
@@ -467,7 +455,10 @@
             type="submit"
             class="w-full items-center justify-center rounded-md border border-transparent bg-lime-600 px-5 py-3 text-base font-medium text-white hover:bg-lime-700"
           >
-            {#if processing} Processing...{:else} Complete Your Order {/if}
+            {#if processing}
+              Processing...{:else}
+              Complete Your Order
+            {/if}
           </button>
 
           <p class="flex justify-center text-sm font-medium text-gray-500">

@@ -1,4 +1,5 @@
 import type { PageServerLoad, Actions } from './$types'
+import type { OrderSummary } from '$lib/types/order';
 import { fail, redirect } from '@sveltejs/kit'
 import medusa from '$lib/server/medusa'
 
@@ -14,7 +15,7 @@ export const load: PageServerLoad = async function ({ locals }) {
 export const actions: Actions = {
    default: async ({ locals, cookies }) => {
       //remove cookie first because customer has already paid for the cart
-      const order = await medusa.completeCart(locals)
+      const order = await medusa.completeCart(locals) as OrderSummary
       cookies.set('cartid', '', {
          path: '/',
          maxAge: 0,

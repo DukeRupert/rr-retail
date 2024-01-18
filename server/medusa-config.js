@@ -25,7 +25,8 @@ try {
 
 // CORS when consuming Medusa from admin
 const ADMIN_CORS =
-  process.env.ADMIN_CORS || "http://localhost:7001,https://7001-debug-dukerupert-rrretail-taek4wqwtx2.ws-us107.gitpod.io";
+  process.env.ADMIN_CORS ||
+  "http://localhost:7001,https://7001-debug-dukerupert-rrretail-taek4wqwtx2.ws-us107.gitpod.io";
 
 // CORS to avoid issues when consuming Medusa from a client
 const STORE_CORS = process.env.STORE_CORS || "http://localhost:8000";
@@ -52,12 +53,20 @@ const plugins = [
       develop: {
         open: process.env.OPEN_BROWSER !== "false",
         allowedHosts: [
-          'https://7001-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io',
-          '7001-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io',
-          '9000-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io'
-        ],        
+          "https://7001-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io",
+          "7001-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io",
+          "9000-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io",
+        ],
       },
-      backend: 'https://9000-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io'
+      backend:
+        "https://9000-dukerupert-rrretail-4xknb4x3e8j.ws-us107.gitpod.io",
+    },
+  },
+  {
+    resolve: `medusa-payment-stripe`,
+    options: {
+      api_key: process.env.SECRET_STRIPE_KEY,
+      webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
     },
   },
 ];

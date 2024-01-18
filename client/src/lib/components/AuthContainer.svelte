@@ -1,5 +1,5 @@
 <section 
-   class="h-screen pt-6 px-4 lg:px-6 pb-20 md:pb-32 overflow-hidden" 
+   class="min-h-screen pt-6 px-4 lg:px-6 pb-20 md:pb-32" 
    style="background-image: linear-gradient(
       135deg,
       hsl(240deg 5% 60%) 0%,

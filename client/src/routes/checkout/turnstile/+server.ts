@@ -1,24 +1,18 @@
 import type { RequestHandler } from "./$types";
-import { validateToken } from "sveltekit-turnstile";
-import { SECRET_TURNSTILE_KEY } from "$env/static/private";
 import { error, json } from "@sveltejs/kit";
 import medusa from "$lib/server/medusa";
 
-export const POST: RequestHandler = async ({ request, locals }) => {
-  const data = await request.json();
-  let token = data.token as string;
-  if (token !== "no-token-required") {
-    if (!(await validateToken(token, SECRET_TURNSTILE_KEY)))
-      throw error(400, { message: "Bot risk" });
-  }
-  console.log("Fetching cart from locals to createPaymentSession");
+export const GET: RequestHandler = async ({ locals }) => {
+  
+  console.log("Create payment session");
   let cart = await medusa.createPaymentSessions(locals);
-  console.log(cart);
   if (!cart.total) {
     throw error(400, { message: "Could not create payment sessions" });
-  }
-
+  }  
+  console.log(cart)
+  console.log("select payment session: stripe")
   cart = await medusa.selectPaymentSession(locals, "stripe");
+  console.log(cart)
   if (!cart.total) {
     throw error(400, { message: "Could not select payment provider" });
   }
